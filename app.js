@@ -1,73 +1,64 @@
+#! usr/bin/env node
 import inquirer from "inquirer";
+import chalk from "chalk";
 class Person {
-    //Represent the Personality//
-    _personality;
+    personality;
     constructor() {
-        this._personality = "Mystery";
+        this.personality = "Mystery";
     }
-    askQuestion(answer) {
-        console.log(answer);
-        if (answer === "Socializing") {
-            this._personality = "Extrovert";
+    askQuestion(ans) {
+        if (ans === 1) {
+            this.personality = "Extrovert";
         }
-        else if (answer === "Alone time") {
-            this._personality = "Introvert";
+        else if (ans === 2) {
+            this.personality = "Introvert";
         }
         else {
-            this._personality = "You are still a mystery";
+            this.personality = "Still A Mystery!!";
         }
     }
-    //Reutrun the value
-    get personality() {
-        return this._personality;
-    }
-    set personality(value) {
-        this._personality = value;
+    getPersonality() {
+        return this.personality;
     }
 }
 class Student extends Person {
-    _name;
-    constructor() {
-        super();
-        this._name = "";
+    name = "";
+    setName(name) {
+        this.name = name;
     }
-    //Return the value///
-    get name() {
-        return this._name;
-    }
-    set name(value) {
-        this._name = value;
+    getName() {
+        return this.name;
     }
 }
-class Main {
-    async ask() {
-        const { mind } = await inquirer.prompt({
-            type: "list",
-            message: "What do you prefer?",
-            choices: ["Socializing", "Alone time"],
-            name: "mind",
-        });
-        if (mind) {
-            const person = new Person();
-            person.askQuestion(mind);
-            const { name } = await inquirer.prompt({
-                message: "What is your name?",
-                name: "name",
-            });
-            const student = new Student();
-            student.name = name;
-            console.log(`Hello ${student.name}! your personality is ${student.personality}!`);
-            const { again } = await inquirer.prompt({
-                // SIR YE ERROR KIS CHEEZ KA ARAHA
-                message: "Would you like to try again?",
-                name: "again",
-                type: "confirm",
-            });
-            if (again) {
-                this.ask();
+// function 
+async function oop() {
+    let ans;
+    let name = "";
+    let { userAns } = await inquirer.prompt({
+        name: "userAns",
+        type: "number",
+        message: chalk.magentaBright("Type 1 if you like to talk others and type 2 if you would rather keep to Yourself: "),
+        validate: (input) => {
+            if (isNaN(input)) {
+                return "Please Enter An Integer Value!!";
+            }
+            else {
+                return true;
             }
         }
-    }
+    });
+    ans = userAns;
+    let myPerson = new Person();
+    myPerson.askQuestion(ans);
+    console.log(chalk.blue(`You are ${myPerson.getPersonality()}`));
+    let { userName } = await inquirer.prompt({
+        name: "userName",
+        type: "input",
+        message: chalk.greenBright("What is your Name? ")
+    });
+    name = userName;
+    let myStudent = new Student();
+    myStudent.setName(name);
+    console.log(chalk.magentaBright(`\n\tHi ${myStudent.getName()}, Your personality type is "${myPerson.getPersonality()}".`));
 }
-const main = new Main();
-main.ask();
+oop();
