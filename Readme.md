@@ -3,6 +3,6 @@
 ## Run the Oop_Personality_cli
 
 ```
-oop-personality-cli
+npx oop-personality-cli
 
 ```
